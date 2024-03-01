@@ -1,6 +1,7 @@
 name: tldw_env
 channels:
   - defaults
+  - pypi
 dependencies:
   - pip
   - python=3
