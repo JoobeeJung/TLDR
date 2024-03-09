@@ -5,13 +5,12 @@ This module provides preprocess_tdidf function that will create embeddings based
 It loads either TED Talks or Podcast transcripts, encodes them using tdidf vectorizer and saves the
 embeddings to a file.
 """
-
-import pandas as pd
+# pylint: disable=E1101 # Added this as pylint can't understand dynamic code causing pylint issues
 import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
-from . import validation
+from . import helper_load_validate
 
-def preprocess_tdidf(ted_or_podcast):
+def preprocess_tdidf(ted_or_podcast, test):
     """
     This file preprocesses the ted talks/ podcasts and creates the embedding files for each using
     tdidf vectorizer.
@@ -29,19 +28,12 @@ def preprocess_tdidf(ted_or_podcast):
     None
     """
 
-    validation.validate_ted_or_podcast(ted_or_podcast)
+    helper_load_validate.validate_ted_or_podcast(ted_or_podcast)
 
-    if ted_or_podcast == "ted":
-        # Load TED Talks Dataset
-        filepath = "./ted_talks_en.csv"
-        data_df = pd.read_csv(filepath)
-        transcripts = data_df["transcript"].tolist()  # List of transcripts
-    else:
-        # Load Podcast Dataset
-        filepath = "./skeptoid_transcripts.csv"
-        data_df = pd.read_csv(filepath)
-        data_df = data_df.dropna(subset=["text"])
-        transcripts = data_df["text"].tolist()  # List of transcripts
+    if not isinstance(test, bool):
+        raise TypeError("test must be a boolean")
+
+    data_df, transcripts = helper_load_validate.load_data(ted_or_podcast, test)
 
     tfidf_vectorizer = TfidfVectorizer()
     tokenized_transcripts = tfidf_vectorizer.fit_transform(transcripts)
@@ -49,10 +41,21 @@ def preprocess_tdidf(ted_or_podcast):
     data_df['token'] = (
     [" ".join(tokens) for tokens in tfidf_vectorizer.inverse_transform(tokenized_transcripts)])
 
-    # Save the preprocessed DataFrame and TF-IDF vectorizer to files
-    if ted_or_podcast == "ted":
-        data_df.to_csv('ted_tdidf_preprocessed.csv', index=False)
-        joblib.dump(tfidf_vectorizer, 'ted_tfidf_vectorizer.joblib')
+    if test:
+        output_path = '../TLDW/tests/test_output/'
+        # Save the preprocessed DataFrame and TF-IDF vectorizer to files
+        if ted_or_podcast == "ted":
+            data_df.to_csv(output_path + 'test_ted_tdidf_preprocessed.csv', index=False)
+            joblib.dump(tfidf_vectorizer, output_path + 'test_ted_tfidf_vectorizer.joblib')
+        else:
+            data_df.to_csv(output_path + 'test_podcast_tdidf_preprocessed.csv', index=False)
+            joblib.dump(tfidf_vectorizer, output_path + 'test_podcast_tfidf_vectorizer.joblib')
     else:
-        data_df.to_csv('podcast_tdidf_preprocessed.csv', index=False)
-        joblib.dump(tfidf_vectorizer, 'podcast_tfidf_vectorizer.joblib')
+        # Save the preprocessed DataFrame and TF-IDF vectorizer to files
+        output_path = '../TLDW/data/'
+        if ted_or_podcast == "ted":
+            data_df.to_csv(output_path + 'ted_tdidf_preprocessed.csv', index=False)
+            joblib.dump(tfidf_vectorizer, output_path + 'ted_tfidf_vectorizer.joblib')
+        else:
+            data_df.to_csv(output_path + 'podcast_tdidf_preprocessed.csv', index=False)
+            joblib.dump(tfidf_vectorizer, output_path + 'podcast_tfidf_vectorizer.joblib')

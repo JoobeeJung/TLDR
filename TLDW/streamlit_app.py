@@ -35,7 +35,7 @@ def create_accordion_recs(recommendations):
     for _, row in recommendations.iterrows():
         with st.expander(f"Recommendation {i}: {row['title']}"):
             st.markdown("- **URL:** " + row['url'])
-            st.markdown("- **Similarity Score:** " + str(round(row['cosine_similarity'], 2)))
+            st.markdown("- **Similarity Score:** " + str(round(row['sim_scores'], 2)))
         i += 1
 
 # Function to get transcript, summary, and keywords if not already obtained

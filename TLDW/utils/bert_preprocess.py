@@ -7,11 +7,10 @@ and saves the embeddings to a file.
 """
 
 import torch
-import pandas as pd
 from sentence_transformers import SentenceTransformer
-from . import validation
+from . import helper_load_validate
 
-def preprocess_bert(ted_or_podcast):
+def preprocess_bert(ted_or_podcast, test):
     """
     This file preprocesses the ted talks/ podcasts and creates the embedding files for each using
     Roberta model.
@@ -28,18 +27,12 @@ def preprocess_bert(ted_or_podcast):
     Returns:
     None
     """
-    validation.validate_ted_or_podcast(ted_or_podcast)
-
-    if ted_or_podcast == "ted":
-        # Load TED Talks Dataset
-        filepath = "../TLDW/data/ted_talks_en.csv"
-        ted_df = pd.read_csv(filepath)
-        transcripts = ted_df["transcript"].tolist()  # List of transcripts
-    else:
-        # Load Podcast Dataset
-        filepath = "../TLDW/data/skeptoid_transcripts.csv"
-        podcast_df = pd.read_csv(filepath)
-        transcripts = podcast_df["text"].tolist()  # List of transcripts
+    helper_load_validate.validate_ted_or_podcast(ted_or_podcast)
+    
+    if not isinstance(test, bool):
+        raise TypeError("test must be a boolean")
+    
+    _, transcripts = helper_load_validate.load_data(ted_or_podcast, test)
 
     # Load pre-trained Roberta model
     model_name = 'stsb-roberta-large'
@@ -49,7 +42,15 @@ def preprocess_bert(ted_or_podcast):
     embeddings = model.encode(transcripts, show_progress_bar=True)
 
     # Save the embeddings to a file
-    if ted_or_podcast == "ted":
-        torch.save(embeddings, 'ted_sbert_embeddings2.pt')
+    if test:
+        output_path = '../TLDW/tests/test_output/'
+        if ted_or_podcast == "ted":
+            torch.save(embeddings, output_path + 'test_ted_sbert_embeddings.pt')
+        else:
+            torch.save(embeddings, output_path + 'test_podcast_sbert_embeddings.pt')
     else:
-        torch.save(embeddings, 'podcast_sbert_embeddings2.pt')
+        output_path = '../TLDW/data/'
+        if ted_or_podcast == "ted":
+            torch.save(embeddings, output_path + 'ted_sbert_embeddings.pt')
+        else:
+            torch.save(embeddings, output_path + 'podcast_sbert_embeddings.pt')

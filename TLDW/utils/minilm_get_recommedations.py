@@ -13,7 +13,7 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
-from . import validation
+from . import helper_load_validate
 
 # Function to get recommendations using precomputed embeddings
 def get_minilm_recs(input_transcript, ted_or_podcast):
@@ -33,8 +33,8 @@ def get_minilm_recs(input_transcript, ted_or_podcast):
     top_recommendations: List of top 3 recommendations
     """
 
-    validation.validate_input_transcript(input_transcript)
-    validation.validate_ted_or_podcast(ted_or_podcast)
+    helper_load_validate.validate_input_transcript(input_transcript)
+    helper_load_validate.validate_ted_or_podcast(ted_or_podcast)
 
     titles, urls, embeddings = load_data(ted_or_podcast)
 
@@ -47,27 +47,27 @@ def get_minilm_recs(input_transcript, ted_or_podcast):
     user_input_embedding = np.mean([model.encode(chunk) for chunk in chunks], axis=0)
 
     # Compute cosine similarity between user input and TED transcripts
-    similarity_scores = cosine_similarity([user_input_embedding], embeddings)[0]
+    similarities = cosine_similarity([user_input_embedding], embeddings)[0]
 
     # Rank transcripts based on similarity scores
-    ranked_transcripts = sorted(zip(titles, urls, similarity_scores), key=lambda x: x[1], reverse=True)
+    ranked_transcripts = sorted(zip(titles, urls, similarities), key=lambda x: x[2], reverse=True)
 
     # Get top 3 recommendations
-    #top_recommendations = ranked_transcripts[:3]
-    
-    top_recommendations_df = pd.DataFrame(ranked_transcripts, columns=['title', 'url', 'cosine_similarity'])
+    top_recommendations = pd.DataFrame(ranked_transcripts, columns=['title', 'url', 'sim_scores'])
+    top_recommendations = top_recommendations.head(3)
 
 
     # Print top 3 recommendations
-    # print("-------------------------------------------------------------")
-    # print(f"Top 3 Recommendations for {ted_or_podcast} - Model all-MiniLM-L6-v2:")
-    # for i, (recommendation, similarity_score) in enumerate(top_recommendations, 1):
-    #     print(f"Recommendation {i}")
-    #     print(f"Title: {recommendation}")
-    #     print(f"Similarity Score: {similarity_score}")
-    #     print()
+    print("-------------------------------------------------------------")
+    print(f"Top 3 Recommendations for {ted_or_podcast} - Model all-MiniLM-L6-v2:")
+    for i, (title, url, score) in enumerate(top_recommendations.itertuples(index=False), 1):
+        print(f"Recommendation {i}")
+        print(f"Title: {title}")
+        print(f"URL: {url}")
+        print(f"Similarity Score: {score}")
+        print()
 
-    return top_recommendations_df.head(3)
+    return top_recommendations
 
 def load_data(ted_or_podcast):
     """
@@ -81,7 +81,8 @@ def load_data(ted_or_podcast):
 
     Returns:
     titles (list): List of titles from the loaded dataset.
-    embeddings: Precomputed embeddings corresponding to the loaded dataset.
+    urls (list): List of URLs corresponding to the titles.
+    embeddings: Precomputed embeddings corresponding to the loaded dataset
     """
     if ted_or_podcast == "ted":
         # Load TED Talks Dataset
@@ -91,6 +92,7 @@ def load_data(ted_or_podcast):
     else:
         # Load Podcast Dataset
         data_df = pd.read_csv("../TLDW/data/skeptoid_transcripts.csv")
+        data_df = data_df.dropna(subset=['text'])
         with open('../TLDW/data/podcast_sentTrans_embeddings.pkl', 'rb') as file:
             embeddings = pickle.load(file)
 

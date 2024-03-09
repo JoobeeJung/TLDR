@@ -8,12 +8,11 @@ and saves the embeddings to a file.
 """
 
 import pickle
-import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer
-from . import validation
+from . import helper_load_validate
 
-def preprocess_minilm(ted_or_podcast):
+def preprocess_minilm(ted_or_podcast, test):
     """
     This file preprocesses the ted talks/ podcasts and creates the embedding files for each using
     sentence_transformer MiniLM.
@@ -30,18 +29,12 @@ def preprocess_minilm(ted_or_podcast):
     Returns:
     None
     """
-    validation.validate_ted_or_podcast(ted_or_podcast)
+    helper_load_validate.validate_ted_or_podcast(ted_or_podcast)
 
-    if ted_or_podcast == "ted":
-        # Load TED Talks Dataset
-        filepath = "./ted_talks_en.csv"
-        ted_df = pd.read_csv(filepath)
-        transcripts = ted_df["transcript"].tolist()  # List of transcripts
-    else:
-        # Load Podcast Dataset
-        filepath = "./skeptoid_transcripts.csv"
-        podcast_df = pd.read_csv(filepath)
-        transcripts = podcast_df["text"].tolist()  # List of transcripts
+    if not isinstance(test, bool):
+        raise TypeError("test must be a boolean")
+
+    _, transcripts = helper_load_validate.load_data(ted_or_podcast, test)
 
     # Load Sentence Transformer model
     model_name = "sentence-transformers/all-MiniLM-L6-v2"
@@ -58,10 +51,20 @@ def preprocess_minilm(ted_or_podcast):
             transcript_embedding = np.mean(chunk_embeddings, axis=0)
             embeddings.append(transcript_embedding)
 
-    # Save embeddings to a file
-    if ted_or_podcast == "ted":
-        with open('ted_sentTrans_embeddings.pkl', 'wb') as file:
-            pickle.dump(embeddings, file)
+    if test:
+        output_path = '../TLDW/tests/test_output/'
+        if ted_or_podcast == "ted":
+            with open(output_path + 'test_ted_sentTrans_embeddings.pkl', 'wb') as file:
+                pickle.dump(embeddings, file)
+        else:
+            with open(output_path + 'test_podcast_sentTrans_embeddings.pkl', 'wb') as file:
+                pickle.dump(embeddings, file)
     else:
-        with open('podcast_sentTrans_embeddings.pkl', 'wb') as file:
-            pickle.dump(embeddings, file)
+        # Save embeddings to a file
+        output_path = '../TLDW/data/'
+        if ted_or_podcast == "ted":
+            with open(output_path + 'ted_sentTrans_embeddings.pkl', 'wb') as file:
+                pickle.dump(embeddings, file)
+        else:
+            with open(output_path + 'podcast_sentTrans_embeddings.pkl', 'wb') as file:
+                pickle.dump(embeddings, file)

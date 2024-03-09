@@ -1,3 +1,44 @@
+# from youtube_transcript_api import YouTubeTranscriptApi
+
+# DEBUG_MODE = False
+
+# def get_video_id(youtube_url):
+#     # Split the URL by "=" sign
+#     parts = youtube_url.split("v=")
+#     # Take the last part of the resulting list
+#     video_id = parts[-1]
+#     if DEBUG_MODE:
+#         print("Video ID: " + video_id)
+#     return video_id
+
+# def get_video_transcript(video_id):
+#     try:
+#         transcriptDict = YouTubeTranscriptApi.get_transcript(video_id)
+#         formattedTranscript = formatTranscript(transcriptDict)
+#         if DEBUG_MODE:
+#             print("Processed transcript: " + formattedTranscript)
+#         return formattedTranscript
+#     except Exception as e:
+#         print("Failed to get transcript")
+#         if DEBUG_MODE:
+#             print(f"Error: {e}")
+#         return None
+
+# def formatTranscript(transcriptDict):
+#     transcript_string = ""
+#     for item in transcriptDict:
+#         transcript_string += item['text'] + " "
+#     # Replace multiple spaces with a single space
+#     transcript_string = ' '.join(transcript_string.split())
+#     return transcript_string.strip()
+
+# def get_transcript(youtube_url):
+#     video_id = get_video_id(youtube_url)
+#     transcript = get_video_transcript(video_id)
+#     return transcript
+
+# ----------------------------------------------------------------
+
 """
 process_transcripts.py
 
@@ -30,9 +71,9 @@ def get_video_id(youtube_url):
     # Edge conditions for unit testing:
     if len(video_id) == 0:
         raise ValueError("Video id for input video cannot be blank")
-    if len(video_id) != 11:
-        raise ValueError("Video ID needs to have 11 characters")
-    if not video_id.isalnum():
+    #if len(video_id) != 11:
+     #   raise ValueError("Video ID needs to have 11 characters")
+    if not video_id[:11].isalnum():
         raise ValueError("Video ID is not correct")
     if DEBUG_MODE:
         print("Video ID: " + video_id)
@@ -53,19 +94,20 @@ def get_video_transcript(video_id):
     """
     try:
         transcript_dict = YouTubeTranscriptApi.get_transcript(video_id, languages=['en-US', 'en'])
-        languages = set(segment['language'] for segment in transcript_dict)
-        if any(language not in {'en-US', 'en'} for language in languages):
-            raise ValueError("Transcript does not contain 'en-US' and 'en' as caption languages.")
+        # desired_languages = {'en-US', 'en'}  # Desired languages
+        # available_languages = {segment.get('language') for segment in transcript_dict}
+        # if not desired_languages.intersection(available_languages):
+        #     raise ValueError("Transcript does not contain any of the desired languages.")
         formatted_transcript = format_transcript(transcript_dict)
         if DEBUG_MODE:
             print("Processed transcript: " + formatted_transcript)
         return formatted_transcript
     except TranscriptsDisabled:
-        print("Transcripts are disabled for this video.")
-        return None
+        raise ValueError("Transcripts are disabled for this video.")
     except NoTranscriptAvailable:
-        print("No transcript available for this video.")
-        return None
+        raise ValueError("No transcript available for this video.")
+    except Exception as e:
+        raise e
    # except Exception as error:
    #     print("Failed to get transcript")
    #     if DEBUG_MODE:

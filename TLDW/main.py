@@ -20,21 +20,21 @@ def main():
     # print(keywords)
 
     # Roberta
-    #preprocess_bert("ted")
-    #get_bert_recs(transcript, "ted")
-    #preprocess_bert("podcast")
-    #get_bert_recs(transcript, "podcast")
+    # preprocess_bert("ted", False)
+    # get_bert_recs(transcript, "ted")
+    # preprocess_bert("podcast", False)
+    # get_bert_recs(transcript, "podcast")
 
     # # Sentence-transformer -> all-MiniLM-L6-v2
-    # preprocess_minilm("ted")
-    #get_minilm_recs(transcript, "ted")
-    # preprocess_minilm("podcast")
-    #get_minilm_recs(transcript, "podcast")
+    # preprocess_minilm("ted", False)
+    # get_minilm_recs(transcript, "ted")
+    # preprocess_minilm("podcast", False)
+    # get_minilm_recs(transcript, "podcast")
 
     # # tdidf
-    # preprocess_tdidf("ted")
+    # preprocess_tdidf("ted", False)
     get_tdidf_recs(transcript, "ted")
-    # preprocess_tdidf("podcast")
+    # preprocess_tdidf("podcast", False)
     get_tdidf_recs(transcript, "podcast")
 
 
