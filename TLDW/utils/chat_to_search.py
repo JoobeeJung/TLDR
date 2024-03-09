@@ -44,7 +44,7 @@ def get_search_result(context, user_prompt):
         context_prompt = "Answer the question based on the context below. Context:" + context
         prompt =  context_prompt + "Question:" + user_prompt
 
-        result = llm.invoke(prompt)
+        llm.invoke(prompt)
         search = DuckDuckGoSearchRun(name="Search")
         search_agent = initialize_agent(
             [search], llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, handle_parsing_errors=True
