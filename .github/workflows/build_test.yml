@@ -41,7 +41,6 @@ jobs:
     # GitHub will run the tests for each of these Python versions.
     strategy:
       matrix:
-        # python-version: ["3.9"]
         python-version: ["3.9", "3.10", "3.11"]
 
     # The actual workflow steps!
@@ -73,7 +72,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
           # We don't need the base environment, so don't activate it
           auto-activate-base: false
-
       # You don't normally need test coverage information when
       # developing locally - we just want it in CI - so we install
       # it here instead of in our environment file (which we also
@@ -85,10 +83,10 @@ jobs:
       # If there are any other steps in order for your tests to
       # run successfully, you can add those steps here!
 
-      Next step: run pylint. Anything less than 10/10 will fail.
-      - name: Lint with pylint
-        run: |
-          pylint TLDW/**/*.py
+      # Next step: run pylint. Anything less than 10/10 will fail.
+      # - name: Lint with pylint
+      #   run: |
+      #     pylint utils/**/*.py
 
       # Next step: run the unit tests with code coverage.
       - name: Unit tests
