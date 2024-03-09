@@ -19,13 +19,6 @@ load_dotenv()
 
 API_KEY = os.environ.get('GEMINI_API_KEY')
 
-
-# api_key = os.getenv("GEMINI_API_KEY")
-# API_KEY = "AIzaSyAIDOlnc6NVX9LCwvNNuF6zXqBWplJsVpM"
-
-genai.configure(api_key=API_KEY)
-genai_model = genai.GenerativeModel('gemini-pro')
-
 # Extract information from text based on prompt instructions
 def get_search_result(context, user_prompt):
     """
