@@ -64,15 +64,15 @@ def get_bert_recs(user_transcript, ted_or_podcast):
     top_recommendations = ted_talks_df.nlargest(3, 'sim_scores')
 
     # Print top 3 recommendations
-    print("-------------------------------------------------------------")
-    print(f"Top 3 Recommendations for {ted_or_podcast} - Model Roberta:")
-    i = 1
-    for _, row in top_recommendations.iterrows():
-        print(f"Recommendation {i}")
-        print(f"Title: {row['title']}")
-        print(f"Url: {row['url']}")
-        print(f"Similarity Score: {row['sim_scores']}")
-        i += 1
-        print()
+    # print("-------------------------------------------------------------")
+    # print(f"Top 3 Recommendations for {ted_or_podcast} - Model Roberta:")
+    # i = 1
+    # for _, row in top_recommendations.iterrows():
+    #     print(f"Recommendation {i}")
+    #     print(f"Title: {row['title']}")
+    #     print(f"Url: {row['url']}")
+    #     print(f"Similarity Score: {row['sim_scores']}")
+    #     i += 1
+    #     print()
 
     return top_recommendations

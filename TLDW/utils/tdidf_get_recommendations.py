@@ -58,13 +58,13 @@ def get_tdidf_recs(input_transcript, ted_or_podcast):
     top_recommendations = data_df.nlargest(3, 'sim_scores')
 
     # Print top 3 recommendations
-    print("-------------------------------------------------------------")
-    print(f"Top 3 Recommendations for {ted_or_podcast} - TDIDF:")
-    for i in range(3):
-        print("Recommendation", i + 1)
-        print("Title:", top_recommendations.iloc[i]["title"])
-        print("Title:", top_recommendations.iloc[i]["url"])
-        print("Similarity Score:", top_recommendations.iloc[i]["sim_scores"])
-        print()
+    # print("-------------------------------------------------------------")
+    # print(f"Top 3 Recommendations for {ted_or_podcast} - TDIDF:")
+    # for i in range(3):
+    #     print("Recommendation", i + 1)
+    #     print("Title:", top_recommendations.iloc[i]["title"])
+    #     print("Title:", top_recommendations.iloc[i]["url"])
+    #     print("Similarity Score:", top_recommendations.iloc[i]["sim_scores"])
+    #     print()
 
     return top_recommendations

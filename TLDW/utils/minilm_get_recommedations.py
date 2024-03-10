@@ -58,14 +58,14 @@ def get_minilm_recs(input_transcript, ted_or_podcast):
 
 
     # Print top 3 recommendations
-    print("-------------------------------------------------------------")
-    print(f"Top 3 Recommendations for {ted_or_podcast} - Model all-MiniLM-L6-v2:")
-    for i, (title, url, score) in enumerate(top_recommendations.itertuples(index=False), 1):
-        print(f"Recommendation {i}")
-        print(f"Title: {title}")
-        print(f"URL: {url}")
-        print(f"Similarity Score: {score}")
-        print()
+    # print("-------------------------------------------------------------")
+    # print(f"Top 3 Recommendations for {ted_or_podcast} - Model all-MiniLM-L6-v2:")
+    # for i, (title, url, score) in enumerate(top_recommendations.itertuples(index=False), 1):
+    #     print(f"Recommendation {i}")
+    #     print(f"Title: {title}")
+    #     print(f"URL: {url}")
+    #     print(f"Similarity Score: {score}")
+    #     print()
 
     return top_recommendations
 

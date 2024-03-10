@@ -74,12 +74,26 @@ st.info(
     """,
     icon="👾",
 )
-# Get user input
+
 def rerun():
-    for key in st.session_state.keys():
+    """
+    Function to clear the session state and rerun the Streamlit app.
+
+    This function iterates through all keys in the session state and deletes them,
+    effectively clearing the session state. It then raises a `RerunException`,
+    which triggers the rerunning of the Streamlit app.
+
+    Raises:
+        RerunException: This exception is raised to rerun the Streamlit app.
+
+    Returns:
+        None
+    """
+    for key, _ in st.session_state.items():
         del st.session_state[key]
 
-title = st.text_input('Youtube URL' , on_change=rerun)
+# Get user input
+title = st.text_input('Youtube URL', on_change=rerun)
 
 # Check if user input is provided
 if title:
@@ -104,7 +118,7 @@ if title:
     content_type = st.radio("Choose Content Type", list(content_mapping.keys()))
     selected_content_type = content_mapping[content_type]
     st.session_state.selected_content_type = selected_content_type
-    
+
     # Display recommender buttons based on content type choice
     if selected_content_type:
         st.write(f"Choose a recommender to get recommendations for {content_type}:")
