@@ -5,7 +5,6 @@ import os
 import streamlit as st
 
 # Gemini API
-import google.generativeai as genai
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import initialize_agent, AgentType
 from langchain_community.tools.ddg_search.tool import DuckDuckGoSearchRun
@@ -18,13 +17,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 API_KEY = os.environ.get('GEMINI_API_KEY')
-
-
-# api_key = os.getenv("GEMINI_API_KEY")
-# API_KEY = "AIzaSyAIDOlnc6NVX9LCwvNNuF6zXqBWplJsVpM"
-
-genai.configure(api_key=API_KEY)
-genai_model = genai.GenerativeModel('gemini-pro')
 
 # Extract information from text based on prompt instructions
 def get_search_result(context, user_prompt):
