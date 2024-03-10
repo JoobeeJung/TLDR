@@ -71,6 +71,7 @@ class TestGetAIExtract(unittest.TestCase):
         mock_generate_content.return_value = mock_response
 
         result = get_ai_extract('What is the last word of the sentence', 'tldw rocks')
+        print("result for test_summarize_transcripts =========> ", result)
         self.assertEqual(result, 'rocks')
 
 if __name__ == '__main__':
