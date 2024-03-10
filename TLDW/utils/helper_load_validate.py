@@ -51,6 +51,11 @@ def load_data(ted_or_podcast, test):
     - data_df (DataFrame): The DataFrame containing the loaded data.
     - transcripts (list): The list of transcripts.
     """
+    validate_ted_or_podcast(ted_or_podcast)
+
+    if not isinstance(test, bool):
+        raise TypeError("test must be a boolean")
+
     if ted_or_podcast == "ted":
         # Load TED Talks Dataset
         filepath = "../TLDW/data/ted_talks_en.csv"

@@ -29,7 +29,6 @@ def preprocess_minilm(ted_or_podcast, test):
     Returns:
     None
     """
-    helper_load_validate.validate_ted_or_podcast(ted_or_podcast)
 
     if not isinstance(test, bool):
         raise TypeError("test must be a boolean")

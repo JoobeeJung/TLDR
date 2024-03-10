@@ -1,43 +1,4 @@
-# from youtube_transcript_api import YouTubeTranscriptApi
 
-# DEBUG_MODE = False
-
-# def get_video_id(youtube_url):
-#     # Split the URL by "=" sign
-#     parts = youtube_url.split("v=")
-#     # Take the last part of the resulting list
-#     video_id = parts[-1]
-#     if DEBUG_MODE:
-#         print("Video ID: " + video_id)
-#     return video_id
-
-# def get_video_transcript(video_id):
-#     try:
-#         transcriptDict = YouTubeTranscriptApi.get_transcript(video_id)
-#         formattedTranscript = formatTranscript(transcriptDict)
-#         if DEBUG_MODE:
-#             print("Processed transcript: " + formattedTranscript)
-#         return formattedTranscript
-#     except Exception as e:
-#         print("Failed to get transcript")
-#         if DEBUG_MODE:
-#             print(f"Error: {e}")
-#         return None
-
-# def formatTranscript(transcriptDict):
-#     transcript_string = ""
-#     for item in transcriptDict:
-#         transcript_string += item['text'] + " "
-#     # Replace multiple spaces with a single space
-#     transcript_string = ' '.join(transcript_string.split())
-#     return transcript_string.strip()
-
-# def get_transcript(youtube_url):
-#     video_id = get_video_id(youtube_url)
-#     transcript = get_video_transcript(video_id)
-#     return transcript
-
-# ----------------------------------------------------------------
 
 """
 process_transcripts.py
@@ -69,13 +30,13 @@ def get_video_id(youtube_url):
     # Take the last part of the resulting list
     video_id = parts[-1]
     # Edge conditions for unit testing:
-    if len(video_id) == 0:
+    if len(video_id) == 0: # check this
         raise ValueError("Video id for input video cannot be blank")
     #if len(video_id) != 11:
      #   raise ValueError("Video ID needs to have 11 characters")
     if not video_id[:11].isalnum():
         raise ValueError("Video ID is not correct")
-    if DEBUG_MODE:
+    if DEBUG_MODE: # check this
         print("Video ID: " + video_id)
     return video_id
 
@@ -102,12 +63,12 @@ def get_video_transcript(video_id):
         if DEBUG_MODE:
             print("Processed transcript: " + formatted_transcript)
         return formatted_transcript
-    except TranscriptsDisabled:
-        raise ValueError("Transcripts are disabled for this video.")
-    except NoTranscriptAvailable:
-        raise ValueError("No transcript available for this video.")
-    except Exception as e:
-        raise e
+    except TranscriptsDisabled as exc :
+        raise ValueError("Transcripts are disabled for this video.") from exc
+    except NoTranscriptAvailable as exc:
+        raise ValueError("No transcript available for this video.") from exc
+    except Exception as exc:
+        raise exc
    # except Exception as error:
    #     print("Failed to get transcript")
    #     if DEBUG_MODE:
@@ -132,8 +93,8 @@ def format_transcript(transcript_dict):
         transcript_string += item['text'] + " "
     # Replace multiple spaces with a single space
     transcript_string = ' '.join(transcript_string.split())
-    if len(transcript_string) == 0:
-        raise ValueError('There is no transcript associated with the video')
+    #if len(transcript_string) == 0:
+     #   raise ValueError('There is no transcript associated with the video')
     return transcript_string.strip()
 
 def get_transcript(youtube_url):

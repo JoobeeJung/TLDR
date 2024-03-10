@@ -1,5 +1,5 @@
 """
-Module: mini_get_recommendations
+Module: minilm_get_recommendations
 Description:
 This module provides a functions to get recommendations based on user transcripts using MiniLM
 embeddings. The function takes a user transcript and a type of content (TED or podcast), generates

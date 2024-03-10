@@ -28,8 +28,6 @@ def preprocess_tdidf(ted_or_podcast, test):
     None
     """
 
-    helper_load_validate.validate_ted_or_podcast(ted_or_podcast)
-
     if not isinstance(test, bool):
         raise TypeError("test must be a boolean")
 

@@ -35,12 +35,12 @@ def get_tdidf_recs(input_transcript, ted_or_podcast):
     # Load preprocessed dataset and embeddings
     if ted_or_podcast == "ted":
         # Load TED Talks Dataset
-        data_df = pd.read_csv("../TLDW/data/ted_tdidf_preprocessed.csv") # Update file location
+        data_df = pd.read_csv("../TLDW/data/ted_tdidf_preprocessed.csv")
         tfidf_vectorizer = joblib.load('../TLDW/data/ted_tfidf_vectorizer.joblib')
         transcripts = data_df['transcript']
     else:
         # Load Podcast Dataset
-        data_df = pd.read_csv("../TLDW/data/podcast_tdidf_preprocessed.csv") # Update file location
+        data_df = pd.read_csv("../TLDW/data/podcast_tdidf_preprocessed.csv")
         tfidf_vectorizer = joblib.load('../TLDW/data/podcast_tfidf_vectorizer.joblib')
         transcripts = data_df["text"].tolist()  # List of transcripts
 
