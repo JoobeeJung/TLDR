@@ -75,7 +75,11 @@ st.info(
     icon="👾",
 )
 # Get user input
-title = st.text_input('Youtube URL')
+def rerun():
+    for key in st.session_state.keys():
+        del st.session_state[key]
+
+title = st.text_input('Youtube URL' , on_change=rerun)
 
 # Check if user input is provided
 if title:
